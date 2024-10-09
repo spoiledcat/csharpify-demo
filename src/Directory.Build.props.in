@@ -1,6 +1,6 @@
 <Project>
    <PropertyGroup>
-    <RepoBuildPath>$([MSBuild]::ValueOrDefault('G:/code/projects/spoiledcat/csharpify-demo/build/coreclr', '').Replace('/', '\'))\</RepoBuildPath>
+    <RepoBuildPath>$([MSBuild]::ValueOrDefault('@CMAKE_BINARY_DIR@', '').Replace('/', '\'))\</RepoBuildPath>
     <RepoBinPath>$(RepoBuildPath)bin\</RepoBinPath>
     <RepoObjPath>$(RepoBuildPath)obj\</RepoObjPath>
     <BaseIntermediateOutputPath>$(RepoObjPath)</BaseIntermediateOutputPath>

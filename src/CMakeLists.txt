@@ -6,7 +6,8 @@ cmake_path(APPEND PROJECT_SOURCE_DIR "main.csproj" OUTPUT_VARIABLE CSPROJ)
 cmake_path(GET CSPROJ STEM ASSEMBLYNAME)
 set(ASSEMBLYNAME "${ASSEMBLYNAME}" CACHE STRING "Assembly name")
 
-configure_file("${CMAKE_CURRENT_LIST_DIR}/config.h.in" config.h)
+configure_file("${CSHARPIFY_CONFIG_H_IN}" config.h)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/Directory.Build.props.in" "${CMAKE_CURRENT_LIST_DIR}/Directory.Build.props")
 
 set(publish_args "")
 set(publish_dir "${PROJECT_BINARY_DIR}/publish")

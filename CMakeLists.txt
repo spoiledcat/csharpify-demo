@@ -20,7 +20,32 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install" CACHE PATH "Where the app will be installed to" FORCE)
 endif()
 
-find_package(CSharpify HINTS "${CMAKE_SOURCE_DIR}/../csharpify/install/lib/cmake")
+# Set -DCSHARPIFY_ZIP=[url or local path] to point to a url or local path of a zip of the packaged csharpify
+# (created with cmake --preset [coreclr/mono/nativeaot] && cpack --preset [coreclr/mono/nativeaot])
+if(NOT CSHARPIFY_ZIP)
+  find_package(CSharpify HINTS "${CMAKE_SOURCE_DIR}/../csharpify/install/lib/cmake")
+endif()
+
+if(NOT CSharpify_DIR)
+  if(NOT CSHARPIFY_ZIP)
+    message(FATAL_ERROR "Could not find CSharpify in ../csharpify and CSHARPIFY_ZIP is not set")
+  endif()
+
+  # Normalize the path if it's not a url
+  if(NOT CSHARPIFY_ZIP MATCHES "^http*")
+    cmake_path(ABSOLUTE_PATH CSHARPIFY_ZIP BASE_DIRECTORY "${CMAKE_SOURCE_DIR}" NORMALIZE OUTPUT_VARIABLE CSHARPIFY_ZIP)
+  endif()
+
+  message(STATUS "Installing CSharpify from ${CSHARPIFY_ZIP}")
+
+  include(FetchContent)
+  FetchContent_Declare(
+    CSharpify
+    URL "${CSHARPIFY_ZIP}"
+  )
+  FetchContent_MakeAvailable(CSharpify)
+  find_package(CSharpify HINTS "${FETCHCONTENT_BASE_DIR}/csharpify-src/lib/cmake")
+endif()
 
 file(MAKE_DIRECTORY "${CMAKE_SOURCE_DIR}/packages")
 
